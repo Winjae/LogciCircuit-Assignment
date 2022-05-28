@@ -54,7 +54,14 @@ def minimumCover(PItable):
     NEPI = []
     BeforeTable = copy.deepcopy(PItable)
     AfterTable = copy.deepcopy(BeforeTable)
+    step = 0
     while not isEmpty(BeforeTable):
+        step += 1
+        print("======================Step{0}======================".format(step))
+        print("Before Table")
+        for l in BeforeTable:
+            print(l)
+
         for j in range(1, len(BeforeTable[0])):  # EPI 찾기
             checkEPI = [0]
             epi = []
@@ -65,22 +72,24 @@ def minimumCover(PItable):
                     epi = BeforeTable[i].copy()
             if checkEPI[0] == 1 and (checkEPI[1] not in NEPI):
                 NEPI.append(checkEPI[1])
-                print(checkEPI[1])
                 for i in range(1, len(BeforeTable[0])):
                     for k in range(len(BeforeTable)):
                         if epi[i] == 1:
                             AfterTable[k][i] = 0
 
-        AfterTable = columnDominance(AfterTable)  # Column Dominance 진행
-        AfterTable = rowDominance(AfterTable)  # Row Dominance 진행
-
-        print("Before Table")
-        for l in BeforeTable:
-            print(l)
-        print("After Table")
+        print("After Find EPI or Secondary EPI table")
         for l in AfterTable:
             print(l)
 
+        AfterTable = columnDominance(AfterTable)  # Column Dominance 진행
+        print("After ColumnDominance Table")
+        for l in AfterTable:
+            print(l)
+
+        AfterTable = rowDominance(AfterTable)  # Row Dominance 진행
+        print("After RowDominance Table")
+        for l in AfterTable:
+            print(l)
 
 
         if BeforeTable == AfterTable:
@@ -90,7 +99,7 @@ def minimumCover(PItable):
         BeforeTable = copy.deepcopy(AfterTable)  # 차이가 있으면 Before에다가 After를 복사
 
     for i in range(len(NEPI)):
-        NEPI[i] = NEPI[i].replace("2","-")
+        NEPI[i] = NEPI[i].replace("2", "-")
     return NEPI
 
 
@@ -118,7 +127,7 @@ def findEPI(minterm):
         for num in range(len(minterm[2:])):
             count = pow(2, n) - 1
             included = 0
-            while (count >= 0):
+            while count >= 0:
                 compA = ("{0:0" + str(n) + "b}").format(count)
                 k = len(compA) - 1
                 compB = answer[i]
@@ -146,6 +155,8 @@ def findEPI(minterm):
 
     for i in range(len(result)):
         result[i] = result[i].replace("2", "-")
+    for i in range(len(EPITable)):
+        EPITable[i][0] = EPITable[i][0].replace("2","-")
     return result, EPITable
 
 
@@ -220,4 +231,5 @@ def solution(minterm):
 
 
 a = [4, 13, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-print(solution(a))
+b = [4, 11, 0, 2, 5, 6, 7, 8, 10, 12, 13, 14, 15]
+print(solution(b))
